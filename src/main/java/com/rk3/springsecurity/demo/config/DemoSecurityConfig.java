@@ -16,23 +16,28 @@ public class DemoSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		UserBuilder users = User.withDefaultPasswordEncoder();
 		auth.inMemoryAuthentication().withUser(users.username("john").password("123").roles("EMPLOYEE"))
-				.withUser(users.username("jane").password("123").roles("MANAGER"))
-				.withUser(users.username("jim").password("123").roles("ADMIN"));
+				.withUser(users.username("jane").password("123").roles("EMPLOYEE","MANAGER"))
+				.withUser(users.username("jim").password("123").roles("EMPLOYEE", "ADMIN"));
 	}
 
 	//Custom login, comment out to use Spring's default login form
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
+			.antMatchers("/").hasRole("EMPLOYEE")
+			.antMatchers("/leaders/**").hasRole("MANAGER")
+			.antMatchers("/systems/**").hasRole("ADMIN")
 			.antMatchers("/css/**").permitAll()
-			.anyRequest().authenticated()
+			//.anyRequest().authenticated()
 		.and()
 			.formLogin()
 			.loginPage("/showLogin")
 			.loginProcessingUrl("/authenticateUser")
 			.permitAll()
 		.and()
-			.logout().permitAll();
+			.logout().permitAll()
+		.and()
+			.exceptionHandling().accessDeniedPage("/access-denied");
 	}
 
 }

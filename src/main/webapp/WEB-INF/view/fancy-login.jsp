@@ -38,8 +38,13 @@
 				<div style="padding-top: 30px" class="panel-body">
 
 					<!-- Login Form -->
-					<form:form action="${pageContext.request.contextPath}/authenticateUser"
+					<form:form
+						action="${pageContext.request.contextPath}/authenticateUser"
 						method="POST" class="form-horizontal">
+
+						<!-- Manual CSRF token -->
+						<%-- <input type="hidden" name="${_csrf.parameterName }"
+			value="${_csrf.token}"> --%>
 
 						<!-- Place for messages: error, alert etc ... -->
 						<div class="form-group">
@@ -50,11 +55,10 @@
 										<div class="alert alert-danger col-xs-offset-1 col-xs-10">
 											Invalid username and password.</div>
 									</c:if>
-									
-									<c:if test="${param.logout != null}"></c:if>		            
+
+									<c:if test="${param.logout != null}"></c:if>
 									<div class="alert alert-success col-xs-offset-1 col-xs-10">
-										You have been logged out.
-									</div>
+										You have been logged out.</div>
 
 								</div>
 							</div>
